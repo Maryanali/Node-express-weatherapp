@@ -3,11 +3,19 @@ const { get } = require("http");
 const https =require("https"); 
 const { url } = require("inspector");
 const app = express();
-  
+const bodyParser = require("body-parser");
+
+
+app.use(bodyParser.urlencoded({entended: true}));
 // What should happen when user tries to go to homepage, the root route
 app.get("/", function(req,res){
+    res.sendFile(__dirname + "/index.html");
+})
+
+
+app.post("/", function(req,res){
     const apiKey = "ac254995f1530b05133bdf3b89d170a4";
-    const city = "Pairs";
+    const city = req.body.cityName;
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
     https.get(url, function(response){
         console.log(response.statusCode);
@@ -24,7 +32,6 @@ app.get("/", function(req,res){
         })
     })
 })
-
 
 
 app.listen(3000, function(){
